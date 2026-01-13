@@ -3,7 +3,7 @@ from PIL import Image, ImageOps
 
 # Cargar la imagen original
 # ASEGURATE QUE ESTA RUTA SEA CORRECTA A TU ARCHIVO LOCAL
-input_path = "LOGO ESCUELA POSTGRADO UNAP SIN LETRA 2.png"
+input_path = "trivia.png"
 original_img = Image.open(input_path)
 
 # --- CONFIGURACIÓN DE COLORES ---
