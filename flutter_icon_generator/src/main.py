@@ -1,6 +1,6 @@
 """
 Flutter Icon Generator - Interfaz Gráfica Principal
-Fase 2: Preview visual + Configuración persistente + Templates
+Fase 3: Multiplataforma completa + Integración flutter_launcher_icons
 """
 
 import os
@@ -14,20 +14,22 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from src.icon_generator import IconGenerator
 from src.config_manager import ConfigManager, TemplateManager
 from src.preview_manager import PreviewWindow
+from src.flutter_integration import FlutterLauncherIconsIntegration
 
 class FlutterIconGeneratorApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Flutter Icon Generator v2.0 - Fase 2")
+        self.root.title("Flutter Icon Generator v3.0 - Fase 3 (Multiplataforma)")
         
         # Inicializar gestores
         self.config_manager = ConfigManager()
         self.template_manager = TemplateManager()
+        self.flutter_integration = FlutterLauncherIconsIntegration()
         self.config = self.config_manager.config
         
         # Configurar ventana
         self.root.geometry(f"{self.config.window_width}x{self.config.window_height}")
-        self.root.minsize(900, 750)
+        self.root.minsize(1000, 800)
         
         # Variables
         self.input_path = tk.StringVar(value=self.config.last_input_path)
@@ -36,6 +38,14 @@ class FlutterIconGeneratorApp:
         self.android_scale = tk.DoubleVar(value=self.config.android_scale)
         self.ios_scale = tk.DoubleVar(value=self.config.ios_scale)
         self.selected_template = tk.StringVar(value="default")
+        self.flutter_project_path = tk.StringVar()
+        
+        # Variables para plataformas
+        self.platform_android = tk.BooleanVar(value=True)
+        self.platform_ios = tk.BooleanVar(value=True)
+        self.platform_web = tk.BooleanVar(value=True)
+        self.platform_windows = tk.BooleanVar(value=True)
+        self.platform_macos = tk.BooleanVar(value=True)
         
         self.preview_image = None
         self.preview_tk = None
@@ -86,6 +96,14 @@ class FlutterIconGeneratorApp:
                 command=lambda tid=template_id: self.apply_template(tid)
             )
         
+        # Menú Flutter
+        flutter_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Flutter", menu=flutter_menu)
+        flutter_menu.add_command(label="Seleccionar proyecto Flutter...", command=self.select_flutter_project)
+        flutter_menu.add_command(label="Verificar instalación Flutter", command=self.check_flutter_installation)
+        flutter_menu.add_separator()
+        flutter_menu.add_command(label="Copiar iconos al proyecto", command=self.copy_icons_to_project)
+        
         # Menú Ayuda
         help_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Ayuda", menu=help_menu)
@@ -116,7 +134,7 @@ class FlutterIconGeneratorApp:
             self.update_preview(filepath)
         else:
             messagebox.showerror("Error", "El archivo ya no existe")
-            self.config_manager.load()  # Recargar para limpiar archivos no existentes
+            self.config_manager.load()
             self.update_recent_menu()
     
     def apply_template(self, template_id):
@@ -128,18 +146,13 @@ class FlutterIconGeneratorApp:
             self.android_scale.set(template.get("android_scale", 0.8))
             self.ios_scale.set(template.get("ios_scale", 0.85))
             
-            # Actualizar preview de color
             if self.bg_color.get():
                 self.color_preview.config(bg=self.bg_color.get())
             else:
                 self.color_preview.config(bg="gray")
             
-            # Actualizar labels
             self.update_scale_labels()
-            
             self.log(f"Template aplicado: {template['name']}")
-            
-            # Guardar configuración
             self.save_config()
     
     def center_window(self):
@@ -166,14 +179,14 @@ class FlutterIconGeneratorApp:
         title_label = ttk.Label(
             main_frame, 
             text="Flutter Icon Generator", 
-            font=('Helvetica', 20, 'bold')
+            font=('Helvetica', 22, 'bold')
         )
         title_label.grid(row=0, column=0, columnspan=3, pady=(0, 5))
         
         subtitle_label = ttk.Label(
             main_frame,
-            text="Genera iconos para Android e iOS automáticamente",
-            font=('Helvetica', 10)
+            text="Genera iconos para Android, iOS, Web, Windows y macOS",
+            font=('Helvetica', 11)
         )
         subtitle_label.grid(row=1, column=0, columnspan=3, pady=(0, 20))
         
@@ -191,20 +204,27 @@ class FlutterIconGeneratorApp:
         ttk.Entry(input_frame, textvariable=self.input_path, width=40).grid(row=0, column=1, padx=5, sticky=(tk.W, tk.E))
         ttk.Button(input_frame, text="Buscar...", command=self.select_input_file).grid(row=0, column=2)
         
-        # Preview pequeña
         self.preview_label = ttk.Label(input_frame, text="Sin imagen seleccionada")
         self.preview_label.grid(row=1, column=0, columnspan=3, pady=10)
         
-        # Info de imagen
         self.image_info_label = ttk.Label(input_frame, text="", font=('Helvetica', 8))
         self.image_info_label.grid(row=2, column=0, columnspan=3)
         
-        # --- SECCIÓN 2: TEMPLATES ---
-        template_frame = ttk.LabelFrame(left_frame, text="2. Templates Predefinidos", padding="10")
-        template_frame.grid(row=1, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        # --- SECCIÓN 2: PLATAFORMAS ---
+        platforms_frame = ttk.LabelFrame(left_frame, text="2. Plataformas a Generar", padding="10")
+        platforms_frame.grid(row=1, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        
+        ttk.Checkbutton(platforms_frame, text="Android", variable=self.platform_android).grid(row=0, column=0, sticky=tk.W, padx=5)
+        ttk.Checkbutton(platforms_frame, text="iOS", variable=self.platform_ios).grid(row=0, column=1, sticky=tk.W, padx=5)
+        ttk.Checkbutton(platforms_frame, text="Web", variable=self.platform_web).grid(row=0, column=2, sticky=tk.W, padx=5)
+        ttk.Checkbutton(platforms_frame, text="Windows", variable=self.platform_windows).grid(row=1, column=0, sticky=tk.W, padx=5, pady=5)
+        ttk.Checkbutton(platforms_frame, text="macOS", variable=self.platform_macos).grid(row=1, column=1, sticky=tk.W, padx=5, pady=5)
+        
+        # --- SECCIÓN 3: TEMPLATES ---
+        template_frame = ttk.LabelFrame(left_frame, text="3. Templates Predefinidos", padding="10")
+        template_frame.grid(row=2, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
         template_frame.columnconfigure(0, weight=1)
         
-        # Combobox de templates
         template_names = [f"{v['name']}" for k, v in self.template_manager.get_all_templates().items()]
         self.template_combo = ttk.Combobox(
             template_frame, 
@@ -216,7 +236,6 @@ class FlutterIconGeneratorApp:
         self.template_combo.grid(row=0, column=0, sticky=(tk.W, tk.E), pady=2)
         self.template_combo.bind('<<ComboboxSelected>>', self.on_template_selected)
         
-        # Descripción del template
         self.template_desc_label = ttk.Label(
             template_frame, 
             text="Configuración estándar recomendada",
@@ -225,12 +244,11 @@ class FlutterIconGeneratorApp:
         )
         self.template_desc_label.grid(row=1, column=0, sticky=tk.W, pady=(2, 0))
         
-        # --- SECCIÓN 3: CONFIGURACIÓN ---
-        config_frame = ttk.LabelFrame(left_frame, text="3. Configuración Avanzada", padding="10")
-        config_frame.grid(row=2, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        # --- SECCIÓN 4: CONFIGURACIÓN ---
+        config_frame = ttk.LabelFrame(left_frame, text="4. Configuración Avanzada", padding="10")
+        config_frame.grid(row=3, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
         config_frame.columnconfigure(1, weight=1)
         
-        # Color de fondo
         ttk.Label(config_frame, text="Color de fondo:").grid(row=0, column=0, sticky=tk.W, pady=5)
         color_frame = ttk.Frame(config_frame)
         color_frame.grid(row=0, column=1, sticky=(tk.W, tk.E))
@@ -246,7 +264,6 @@ class FlutterIconGeneratorApp:
         ttk.Button(color_frame, text="Elegir Color", command=self.pick_color).pack(side=tk.LEFT)
         ttk.Button(color_frame, text="Transparente", command=self.set_transparent).pack(side=tk.LEFT, padx=(5, 0))
         
-        # Escalas
         scale_frame = ttk.Frame(config_frame)
         scale_frame.grid(row=1, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(10, 0))
         
@@ -278,14 +295,26 @@ class FlutterIconGeneratorApp:
         self.ios_scale_label = ttk.Label(scale_frame, text=f"{self.ios_scale.get():.0%}")
         self.ios_scale_label.grid(row=1, column=2)
         
-        # --- SECCIÓN 4: CARPETA DE SALIDA ---
-        output_frame = ttk.LabelFrame(left_frame, text="4. Carpeta de Salida", padding="10")
-        output_frame.grid(row=3, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        # --- SECCIÓN 5: CARPETA DE SALIDA ---
+        output_frame = ttk.LabelFrame(left_frame, text="5. Carpeta de Salida", padding="10")
+        output_frame.grid(row=4, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
         output_frame.columnconfigure(1, weight=1)
         
         ttk.Label(output_frame, text="Destino:").grid(row=0, column=0, sticky=tk.W)
         ttk.Entry(output_frame, textvariable=self.output_path, width=40).grid(row=0, column=1, padx=5, sticky=(tk.W, tk.E))
         ttk.Button(output_frame, text="Cambiar...", command=self.select_output_folder).grid(row=0, column=2)
+        
+        # --- SECCIÓN 6: PROYECTO FLUTTER (OPCIONAL) ---
+        flutter_frame = ttk.LabelFrame(left_frame, text="6. Proyecto Flutter (Opcional)", padding="10")
+        flutter_frame.grid(row=5, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        flutter_frame.columnconfigure(1, weight=1)
+        
+        ttk.Label(flutter_frame, text="Ruta:").grid(row=0, column=0, sticky=tk.W)
+        ttk.Entry(flutter_frame, textvariable=self.flutter_project_path, width=40).grid(row=0, column=1, padx=5, sticky=(tk.W, tk.E))
+        ttk.Button(flutter_frame, text="Buscar...", command=self.select_flutter_project).grid(row=0, column=2)
+        
+        self.flutter_status_label = ttk.Label(flutter_frame, text="Sin proyecto seleccionado", font=('Helvetica', 8))
+        self.flutter_status_label.grid(row=1, column=0, columnspan=3, sticky=tk.W, pady=(5, 0))
         
         # === PANEL DERECHO: PREVIEW Y ACCIONES ===
         right_frame = ttk.Frame(main_frame)
@@ -297,7 +326,6 @@ class FlutterIconGeneratorApp:
         btn_frame = ttk.Frame(right_frame)
         btn_frame.grid(row=0, column=0, sticky=(tk.W, tk.E), pady=(0, 10))
         
-        # Botón Preview
         self.preview_btn = tk.Button(
             btn_frame,
             text="👁️ VISTA PREVIA",
@@ -312,7 +340,6 @@ class FlutterIconGeneratorApp:
         )
         self.preview_btn.pack(side=tk.LEFT, padx=(0, 10))
         
-        # Botón Generar
         self.generate_btn = tk.Button(
             btn_frame,
             text="🚀 GENERAR",
@@ -324,7 +351,21 @@ class FlutterIconGeneratorApp:
             width=18,
             cursor="hand2"
         )
-        self.generate_btn.pack(side=tk.LEFT)
+        self.generate_btn.pack(side=tk.LEFT, padx=(0, 10))
+        
+        self.copy_btn = tk.Button(
+            btn_frame,
+            text="📋 COPIAR A FLUTTER",
+            command=self.copy_icons_to_project,
+            bg="#FF9800",
+            fg="white",
+            font=('Helvetica', 10, 'bold'),
+            height=2,
+            width=20,
+            cursor="hand2",
+            state=tk.DISABLED
+        )
+        self.copy_btn.pack(side=tk.LEFT)
         
         # --- LOG/PROGRESO ---
         log_frame = ttk.LabelFrame(right_frame, text="Progreso", padding="10")
@@ -332,7 +373,7 @@ class FlutterIconGeneratorApp:
         log_frame.columnconfigure(0, weight=1)
         log_frame.rowconfigure(0, weight=1)
         
-        self.log_text = tk.Text(log_frame, height=15, wrap=tk.WORD)
+        self.log_text = tk.Text(log_frame, height=20, wrap=tk.WORD)
         self.log_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
         scrollbar = ttk.Scrollbar(log_frame, orient=tk.VERTICAL, command=self.log_text.yview)
@@ -342,7 +383,7 @@ class FlutterIconGeneratorApp:
         # === FOOTER ===
         footer_label = ttk.Label(
             main_frame,
-            text="Fase 2: Preview visual + Configuración persistente + Templates | v2.0",
+            text="Fase 3: Multiplataforma + Integración Flutter | v3.0 | 5 plataformas soportadas",
             font=('Helvetica', 8),
             foreground="gray"
         )
@@ -352,7 +393,6 @@ class FlutterIconGeneratorApp:
         """Maneja la selección de un template desde el combobox"""
         selected_name = self.template_combo.get()
         
-        # Buscar el ID del template por nombre
         for template_id, template_data in self.template_manager.get_all_templates().items():
             if template_data['name'] == selected_name:
                 self.apply_template(template_id)
@@ -388,7 +428,6 @@ class FlutterIconGeneratorApp:
         try:
             self.current_image = Image.open(filepath)
             
-            # Redimensionar para preview
             max_size = 180
             ratio = min(max_size/self.current_image.width, max_size/self.current_image.height)
             new_size = (int(self.current_image.width * ratio), int(self.current_image.height * ratio))
@@ -401,7 +440,6 @@ class FlutterIconGeneratorApp:
                 text=f"{self.current_image.width}x{self.current_image.height}px | {os.path.basename(filepath)}"
             )
             
-            # Habilitar botón de preview
             self.preview_btn.config(state=tk.NORMAL)
             
             self.log(f"Imagen cargada: {os.path.basename(filepath)} ({self.current_image.width}x{self.current_image.height})")
@@ -430,6 +468,85 @@ class FlutterIconGeneratorApp:
         if folder:
             self.output_path.set(folder)
             self.save_config()
+    
+    def select_flutter_project(self):
+        """Abre diálogo para seleccionar proyecto Flutter"""
+        folder = filedialog.askdirectory(title="Seleccionar carpeta del proyecto Flutter")
+        if folder:
+            self.flutter_project_path.set(folder)
+            self.update_flutter_status()
+    
+    def update_flutter_status(self):
+        """Actualiza el estado del proyecto Flutter"""
+        project_path = self.flutter_project_path.get()
+        
+        if not project_path:
+            self.flutter_status_label.config(text="Sin proyecto seleccionado")
+            self.copy_btn.config(state=tk.DISABLED)
+            return
+        
+        if not os.path.exists(os.path.join(project_path, 'pubspec.yaml')):
+            self.flutter_status_label.config(text="⚠️ No es un proyecto Flutter válido (falta pubspec.yaml)")
+            self.copy_btn.config(state=tk.DISABLED)
+            return
+        
+        self.flutter_status_label.config(text="✅ Proyecto Flutter válido")
+        self.copy_btn.config(state=tk.NORMAL)
+    
+    def check_flutter_installation(self):
+        """Verifica si Flutter está instalado"""
+        if self.flutter_integration.is_flutter_available():
+            version = self.flutter_integration.get_flutter_version()
+            messagebox.showinfo(
+                "Flutter Instalado",
+                f"Flutter encontrado:\n{version}\n\n"
+                f"flutter_launcher_icons: {'Instalado' if self.flutter_integration.check_flutter_launcher_icons_installed() else 'No instalado'}"
+            )
+        else:
+            messagebox.showwarning(
+                "Flutter No Encontrado",
+                "Flutter no está instalado o no se encuentra en el PATH del sistema.\n\n"
+                "Puedes seguir usando la aplicación para generar iconos, "
+                "pero no podrás usar la integración automática."
+            )
+    
+    def copy_icons_to_project(self):
+        """Copia los iconos generados al proyecto Flutter"""
+        project_path = self.flutter_project_path.get()
+        output_path = self.output_path.get()
+        
+        if not project_path or not os.path.exists(project_path):
+            messagebox.showerror("Error", "Selecciona un proyecto Flutter válido primero")
+            return
+        
+        if not os.path.exists(output_path):
+            messagebox.showerror("Error", "No se encontraron iconos generados. Genera los iconos primero.")
+            return
+        
+        # Obtener plataformas seleccionadas
+        platforms = []
+        if self.platform_android.get(): platforms.append('android')
+        if self.platform_ios.get(): platforms.append('ios')
+        if self.platform_web.get(): platforms.append('web')
+        if self.platform_windows.get(): platforms.append('windows')
+        if self.platform_macos.get(): platforms.append('macos')
+        
+        self.log("Copiando iconos al proyecto Flutter...")
+        results = self.flutter_integration.copy_icons_to_project(output_path, project_path, platforms)
+        
+        success_count = sum(1 for v in results.values() if v)
+        total_count = len(results)
+        
+        self.log(f"\nCopia completada: {success_count}/{total_count} plataformas exitosas")
+        for platform, success in results.items():
+            status = "✅" if success else "❌"
+            self.log(f"  {status} {platform.capitalize()}")
+        
+        messagebox.showinfo(
+            "Copia Completada",
+            f"Se copiaron los iconos a {success_count}/{total_count} plataformas.\n\n"
+            "Revisa el log para más detalles."
+        )
     
     def pick_color(self):
         """Abre selector de color"""
@@ -469,12 +586,15 @@ class FlutterIconGeneratorApp:
         """Muestra diálogo Acerca de"""
         messagebox.showinfo(
             "Acerca de Flutter Icon Generator",
-            "Flutter Icon Generator v2.0\n\n"
-            "Fase 2: Preview visual + Configuración persistente + Templates\n\n"
+            "Flutter Icon Generator v3.0\n\n"
+            "Fase 3: Multiplataforma + Integración Flutter\n\n"
             "Genera iconos para aplicaciones Flutter de forma automática.\n"
-            "Soporta Android e iOS con todos los tamaños necesarios.\n\n"
+            "Soporta Android, iOS, Web, Windows y macOS.\n\n"
             "Características:\n"
-            "• 23 tamaños de iconos automáticos\n"
+            "• 40+ tamaños de iconos automáticos\n"
+            "• 5 plataformas soportadas\n"
+            "• Generación de YAML para flutter_launcher_icons\n"
+            "• Copia automática al proyecto Flutter\n"
             "• Vista previa visual en tiempo real\n"
             "• Templates predefinidos\n"
             "• Historial de archivos recientes\n"
@@ -498,10 +618,23 @@ class FlutterIconGeneratorApp:
             messagebox.showerror("Error", "El archivo de entrada no existe")
             return
         
+        # Obtener plataformas seleccionadas
+        platforms = []
+        if self.platform_android.get(): platforms.append('android')
+        if self.platform_ios.get(): platforms.append('ios')
+        if self.platform_web.get(): platforms.append('web')
+        if self.platform_windows.get(): platforms.append('windows')
+        if self.platform_macos.get(): platforms.append('macos')
+        
+        if not platforms:
+            messagebox.showerror("Error", "Selecciona al menos una plataforma")
+            return
+        
         # Deshabilitar botón
         self.generate_btn.config(state=tk.DISABLED, text="Generando...")
         self.log_text.delete(1.0, tk.END)
         self.log("Iniciando generación de iconos...")
+        self.log(f"Plataformas seleccionadas: {', '.join(platforms).upper()}")
         
         try:
             # Crear generador
@@ -510,45 +643,86 @@ class FlutterIconGeneratorApp:
             # Generar iconos
             bg_color = self.bg_color.get() if self.bg_color.get() else None
             
-            self.log(f"Color de fondo: {bg_color if bg_color else 'Transparente'}")
-            self.log(f"Escala Android: {self.android_scale.get():.0%}")
-            self.log(f"Escala iOS: {self.ios_scale.get():.0%}")
+            self.log(f"\nConfiguración:")
+            self.log(f"  Color de fondo: {bg_color if bg_color else 'Transparente'}")
+            self.log(f"  Escala Android: {self.android_scale.get():.0%}")
+            self.log(f"  Escala iOS: {self.ios_scale.get():.0%}")
             self.log("")
             
             results = generator.generate_all(
                 input_path=self.input_path.get(),
                 bg_color=bg_color,
                 android_scale=self.android_scale.get(),
-                ios_scale=self.ios_scale.get()
+                ios_scale=self.ios_scale.get(),
+                platforms=platforms
             )
             
             # Mostrar resultados
-            self.log("")
-            self.log("Generación completada!")
-            self.log(f"Total de archivos generados: {results['total']}")
-            self.log("")
-            self.log("Archivos Android:")
-            for f in results['android']:
-                self.log(f"  [A] {os.path.basename(f)}")
+            self.log("\n" + "="*50)
+            self.log("GENERACIÓN COMPLETADA!")
+            self.log("="*50)
+            self.log(f"\nTotal de archivos generados: {results['total']}")
+            self.log(f"Archivo YAML: {os.path.basename(results['yaml'])}")
             
-            self.log("")
-            self.log("Archivos iOS:")
-            for f in results['ios']:
-                self.log(f"  [i] {os.path.basename(f)}")
+            if results['android']:
+                self.log(f"\n📱 Android ({len(results['android'])} archivos):")
+                for f in results['android'][:5]:
+                    self.log(f"  • {os.path.basename(f)}")
+                if len(results['android']) > 5:
+                    self.log(f"  ... y {len(results['android'])-5} más")
+            
+            if results['ios']:
+                self.log(f"\n🍎 iOS ({len(results['ios'])} archivos):")
+                for f in results['ios'][:5]:
+                    self.log(f"  • {os.path.basename(f)}")
+                if len(results['ios']) > 5:
+                    self.log(f"  ... y {len(results['ios'])-5} más")
+            
+            if results['web']:
+                self.log(f"\n🌐 Web ({len(results['web'])} archivos):")
+                for f in results['web'][:5]:
+                    self.log(f"  • {os.path.basename(f)}")
+                if len(results['web']) > 5:
+                    self.log(f"  ... y {len(results['web'])-5} más")
+            
+            if results['windows']:
+                self.log(f"\n🪟 Windows ({len(results['windows'])} archivos):")
+                for f in results['windows'][:5]:
+                    self.log(f"  • {os.path.basename(f)}")
+                if len(results['windows']) > 5:
+                    self.log(f"  ... y {len(results['windows'])-5} más")
+            
+            if results['macos']:
+                self.log(f"\n🍏 macOS ({len(results['macos'])} archivos):")
+                for f in results['macos'][:5]:
+                    self.log(f"  • {os.path.basename(f)}")
+                if len(results['macos']) > 5:
+                    self.log(f"  ... y {len(results['macos'])-5} más")
+            
+            self.log("\n" + "="*50)
+            self.log(f"Archivos guardados en: {self.output_path.get()}")
+            self.log("="*50)
+            
+            # Habilitar botón de copiar si hay proyecto Flutter
+            if self.flutter_project_path.get() and os.path.exists(self.flutter_project_path.get()):
+                self.copy_btn.config(state=tk.NORMAL)
             
             # Preguntar si abrir carpeta
             if messagebox.askyesno(
-                "Exito", 
-                f"Se generaron {results['total']} archivos.\n\nDeseas abrir la carpeta de salida?"
+                "Éxito", 
+                f"Se generaron {results['total']} archivos para {len(platforms)} plataforma(s).\n\n"
+                f"¿Deseas abrir la carpeta de salida?"
             ):
                 os.startfile(self.output_path.get())
             
         except Exception as e:
             messagebox.showerror("Error", f"Error al generar iconos:\n{str(e)}")
-            self.log(f"Error: {str(e)}")
+            self.log(f"\n❌ ERROR: {str(e)}")
+            import traceback
+            self.log(traceback.format_exc())
         finally:
             # Rehabilitar botón
-            self.generate_btn.config(state=tk.NORMAL, text="GENERAR")
+            self.generate_btn.config(state=tk.NORMAL, text="🚀 GENERAR")
 
 def main():
     """Función principal"""

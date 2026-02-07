@@ -156,6 +156,71 @@ TEMPLATES = {
         "use_transparent_bg": False,
         "android_scale": 0.65,
         "ios_scale": 0.70
+    },
+    # Fase 3: Nuevos templates
+    "web_pwa": {
+        "name": "Web / PWA",
+        "description": "Optimizado para aplicaciones web y PWA",
+        "bg_color": "#FFFFFF",
+        "use_transparent_bg": False,
+        "android_scale": 0.85,
+        "ios_scale": 0.88
+    },
+    "web_transparent": {
+        "name": "Web Transparente",
+        "description": "Fondo transparente para favicon y PWA",
+        "bg_color": "#FFFFFF",
+        "use_transparent_bg": True,
+        "android_scale": 0.9,
+        "ios_scale": 0.9
+    },
+    "windows_metro": {
+        "name": "Windows Metro",
+        "description": "Estilo Windows 10/11 Modern UI",
+        "bg_color": "#0078D4",
+        "use_transparent_bg": False,
+        "android_scale": 0.82,
+        "ios_scale": 0.85
+    },
+    "macos_big_sur": {
+        "name": "macOS Big Sur",
+        "description": "Estilo macOS Big Sur con esquinas redondeadas",
+        "bg_color": "#F5F5F7",
+        "use_transparent_bg": False,
+        "android_scale": 0.8,
+        "ios_scale": 0.75
+    },
+    "gradient_ready": {
+        "name": "Listo para Gradiente",
+        "description": "Logo grande sin fondo para aplicar gradientes",
+        "bg_color": "#FFFFFF",
+        "use_transparent_bg": True,
+        "android_scale": 0.6,
+        "ios_scale": 0.65
+    },
+    "minimal": {
+        "name": "Minimalista",
+        "description": "Márgenes extra grandes para diseño minimalista",
+        "bg_color": "#FFFFFF",
+        "use_transparent_bg": False,
+        "android_scale": 0.55,
+        "ios_scale": 0.60
+    },
+    "gaming": {
+        "name": "Gaming",
+        "description": "Estilo gaming con fondo oscuro y logo grande",
+        "bg_color": "#0D0D0D",
+        "use_transparent_bg": False,
+        "android_scale": 0.88,
+        "ios_scale": 0.88
+    },
+    "social": {
+        "name": "Red Social",
+        "description": "Optimizado para apps sociales (estilo Instagram/TikTok)",
+        "bg_color": "#000000",
+        "use_transparent_bg": False,
+        "android_scale": 0.82,
+        "ios_scale": 0.82
     }
 }
 

@@ -1,91 +1,117 @@
-# Flutter Icon Generator v2.0
+# Flutter Icon Generator v3.0
 
-Generador de iconos multiplataforma para Flutter con interfaz gráfica profesional.
+## 🎉 Fase 3 Completada: Multiplataforma + Integración Flutter
 
-## Características
+Generador de iconos profesional para Flutter con soporte completo para **5 plataformas**:
+- ✅ Android
+- ✅ iOS  
+- ✅ Web / PWA
+- ✅ Windows
+- ✅ macOS
 
-### Fase 2 (v2.0) - ACTUAL
-- ✅ **Preview Visual**: Vista previa en tiempo real de iconos Android, iOS y Adaptive
-- ✅ **Configuración Persistente**: Guarda automáticamente preferencias y historial
-- ✅ **Templates Predefinidos**: 6 templates optimizados para diferentes casos de uso
-- ✅ **Historial de Archivos**: Acceso rápido a archivos recientes
-- ✅ **Interfaz Mejorada**: Diseño profesional con panel dividido
-- ✅ **Atajos de Teclado**: Ctrl+O para abrir archivos
+---
 
-### Fase 1 (v1.0)
-- ✅ Generación completa de iconos para Android (7 archivos)
-- ✅ Generación completa de iconos para iOS (16 archivos + Contents.json)
-- ✅ Interfaz gráfica con tkinter
-- ✅ Selección de archivo de entrada y carpeta de salida
-- ✅ Color de fondo personalizable
-- ✅ Escalado ajustable por plataforma
-- ✅ Log de progreso en tiempo real
-- ✅ Ejecutable .exe standalone
+## ✨ Características Principales
 
-## Templates Disponibles
+### 🚀 **Novedades Fase 3**
+- **Soporte Multiplataforma**: Genera iconos para Android, iOS, Web, Windows y macOS
+- **Generación Automática de YAML**: Crea `flutter_launcher_icons.yaml` listo para usar
+- **Integración Directa**: Copia automática de iconos a tu proyecto Flutter
+- **Verificación de Flutter**: Detecta si Flutter está instalado en tu sistema
+- **+40 Archivos Generados**: Incluye todos los tamaños necesarios para cada plataforma
+- **Favicons Web**: Incluye favicon.ico multi-resolución y manifest.json para PWA
+- **Iconos Windows**: Incluye app_icon.ico para aplicaciones Windows
+- **Iconos macOS**: Estructura completa para App Store
 
-1. **Por defecto**: Configuración estándar recomendada
-2. **Material Design**: Optimizado para Material Design (Android)
-3. **iOS Rounded**: Optimizado para iconos redondeados de iOS
-4. **Android Adaptive**: Foco en iconos adaptativos Android 8+
-5. **Tema Oscuro**: Fondo oscuro para logos claros
-6. **Marca Corporativa**: Márgenes amplios para logos con texto
+### 🎨 **Fase 2**
+- Preview visual en tiempo real
+- Configuración persistente (guarda preferencias)
+- 14 Templates predefinidos (8 nuevos en Fase 3)
+- Historial de archivos recientes
 
-## Instalación
+### ⚡ **Fase 1**
+- Generación completa Android/iOS
+- Interfaz gráfica intuitiva
+- Escalado ajustable por plataforma
+- Sin dependencias externas
 
-### Descargar Ejecutable (Recomendado)
-1. Descarga `FlutterIconGenerator.exe` desde la carpeta `dist/`
+---
+
+## 📦 Instalación
+
+### Opción 1: Ejecutable (Recomendado) ⭐
+1. Descarga `FlutterIconGenerator.exe` desde Releases
 2. Ejecuta directamente (no requiere instalación)
 3. ¡Listo!
 
-### Desarrollo
+### Opción 2: Desde Código Fuente
 ```bash
-# Clonar repositorio
 git clone <url>
 cd flutter_icon_generator
-
-# Instalar dependencias
 pip install -r requirements.txt
-
-# Ejecutar
 python src/main.py
 ```
 
-## Crear Ejecutable
+---
 
-```bash
-# Instalar PyInstaller
-pip install pyinstaller
+## 🎯 Cómo Usar
 
-# Construir (Windows)
-build.bat
+### 1️⃣ Seleccionar Imagen
+- Haz clic en "Buscar..." o usa **Ctrl+O**
+- Selecciona tu logo (PNG, JPG, JPEG, GIF, BMP)
+- Verás la vista previa y dimensiones
 
-# O manualmente
-pyinstaller build.spec --clean
-```
+### 2️⃣ Seleccionar Plataformas
+- Activa/desactiva las plataformas que necesitas:
+  - 📱 Android
+  - 🍎 iOS
+  - 🌐 Web
+  - 🪟 Windows
+  - 🍏 macOS
 
-El ejecutable se encontrará en `dist/FlutterIconGenerator.exe`
+### 3️⃣ Elegir Template (Opcional)
+- Selecciona de **14 templates** disponibles:
+  - Por defecto
+  - Material Design
+  - iOS Rounded
+  - Android Adaptive
+  - Tema Oscuro
+  - Marca Corporativa
+  - **Web/PWA** (nuevo)
+  - **Web Transparente** (nuevo)
+  - **Windows Metro** (nuevo)
+  - **macOS Big Sur** (nuevo)
+  - **Gradient Ready** (nuevo)
+  - **Minimalista** (nuevo)
+  - **Gaming** (nuevo)
+  - **Red Social** (nuevo)
 
-## Uso
+### 4️⃣ Configurar Manualmente (Opcional)
+- **Color de fondo**: Personaliza o usa transparente
+- **Escalas**: Ajusta el tamaño del logo en cada plataforma
 
-### Interfaz Gráfica
+### 5️⃣ Vista Previa
+- Haz clic en **"👁️ VISTA PREVIA"**
+- Revisa cómo quedarán tus iconos
+- Ajusta configuración si es necesario
 
-1. **Seleccionar Imagen**: Botón "Buscar..." o Ctrl+O
-2. **Elegir Template**: Selecciona de la lista desplegable (opcional)
-3. **Configurar**: Ajusta color y escalas si es necesario
-4. **Vista Previa**: Haz clic en "👁️ VISTA PREVIA" para ver el resultado
-5. **Generar**: Haz clic en "🚀 GENERAR"
-6. **Abrir Carpeta**: Se abrirá automáticamente la carpeta de salida
+### 6️⃣ Generar
+- Haz clic en **"🚀 GENERAR"**
+- Se crearán **50+ archivos** automáticamente
+- Se incluye `flutter_launcher_icons.yaml`
 
-### Atajos de Teclado
+### 7️⃣ Copiar a Proyecto Flutter (Opcional)
+1. Selecciona tu proyecto Flutter en "6. Proyecto Flutter"
+2. Haz clic en **"📋 COPIAR A FLUTTER"**
+3. Los iconos se copiarán automáticamente a cada carpeta de plataforma
 
-- **Ctrl+O**: Abrir imagen
-- **Menú Archivo → Archivos recientes**: Acceso rápido
+---
 
-## Estructura de Salida
+## 📁 Estructura de Salida
 
 ```
 output/
+├── flutter_launcher_icons.yaml     # Configuración para flutter_launcher_icons
 ├── android/
 │   ├── mipmap-mdpi/ic_launcher.png (48x48)
 │   ├── mipmap-hdpi/ic_launcher.png (72x72)
@@ -94,127 +120,172 @@ output/
 │   ├── mipmap-xxxhdpi/ic_launcher.png (192x192)
 │   ├── ic_launcher_foreground.png (432x432)
 │   └── ic_launcher_1024x1024.png
-└── ios/
-    └── AppIcon.appiconset/
+├── ios/
+│   └── AppIcon.appiconset/
+│       ├── Contents.json
+│       ├── Icon-App-20x20@1x.png ... @3x.png
+│       ├── Icon-App-29x29@1x.png ... @3x.png
+│       ├── Icon-App-40x40@1x.png ... @3x.png
+│       ├── Icon-App-60x60@2x.png ... @3x.png
+│       ├── Icon-App-76x76@1x.png ... @2x.png
+│       ├── Icon-App-83.5x83.5@2x.png
+│       └── Icon-App-1024x1024@1x.png
+├── web/
+│   ├── favicon.ico                   # Multi-resolución (16,32,48)
+│   ├── manifest.json                 # Para PWA
+│   └── icon-72x72.png ... 512x512    # 8 tamaños para PWA
+├── windows/
+│   ├── app_icon.ico                  # Multi-resolución
+│   └── app_icon_16.png ... 256.png   # Iconos individuales
+└── macos/
+    └── Runner/Assets.xcassets/AppIcon.appiconset/
         ├── Contents.json
-        ├── Icon-App-20x20@1x.png ... @3x.png
-        ├── Icon-App-29x29@1x.png ... @3x.png
-        ├── Icon-App-40x40@1x.png ... @3x.png
-        ├── Icon-App-60x60@2x.png ... @3x.png
-        ├── Icon-App-76x76@1x.png ... @2x.png
-        ├── Icon-App-83.5x83.5@2x.png
-        └── Icon-App-1024x1024@1x.png
+        └── app_icon_16x16.png ... 512x512@2x.png
 ```
 
-## Uso en Flutter
+**Total: 50+ archivos generados automáticamente!**
 
-### Manual
-1. Copia la carpeta `android/` a `android/app/src/main/res/`
-2. Copia la carpeta `ios/` a `ios/Runner/Assets.xcassets/`
-3. Reemplaza los archivos existentes
+---
 
-### Con flutter_launcher_icons
-1. Copia los archivos a tu carpeta `assets/images/`
-2. Configura tu `pubspec.yaml`:
-```yaml
-dev_dependencies:
-  flutter_launcher_icons: ^0.13.1
+## 🔧 Uso con flutter_launcher_icons
 
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/images/ic_launcher_1024x1024.png"
-```
-3. Ejecuta:
-```bash
-flutter pub run flutter_launcher_icons
-```
+### Opción 1: Automático (Recomendado)
+1. Selecciona tu proyecto Flutter en la aplicación
+2. Genera los iconos
+3. Haz clic en "📋 COPIAR A FLUTTER"
+4. ¡Listo! Los iconos están en tu proyecto
 
-## Estructura del Proyecto
+### Opción 2: Manual
+1. Copia la carpeta `output/` a tu proyecto
+2. Copia `flutter_launcher_icons.yaml` a la raíz de tu proyecto
+3. Asegúrate de tener `flutter_launcher_icons` en tu `pubspec.yaml`:
+   ```yaml
+   dev_dependencies:
+     flutter_launcher_icons: ^0.13.1
+   ```
+4. Ejecuta:
+   ```bash
+   flutter pub run flutter_launcher_icons
+   ```
 
-```
-flutter_icon_generator/
-├── src/
-│   ├── __init__.py
-│   ├── main.py              # Interfaz gráfica principal
-│   ├── icon_generator.py    # Lógica de generación
-│   ├── config_manager.py    # Configuración persistente
-│   └── preview_manager.py   # Sistema de preview visual
-├── dist/
-│   ├── FlutterIconGenerator.exe  # Ejecutable
-│   └── README.txt
-├── build.spec               # Configuración PyInstaller
-├── build.bat / build.sh     # Scripts de construcción
-├── requirements.txt
-└── README.md
-```
+---
 
-## Configuración Persistente
+## 🎨 Templates Disponibles
 
-La aplicación guarda automáticamente:
-- Último archivo de entrada
-- Última carpeta de salida
-- Color de fondo seleccionado
-- Escalas de Android e iOS
-- Tamaño y posición de la ventana
-- Historial de archivos recientes (últimos 10)
+| Template | Descripción | Uso Ideal |
+|----------|-------------|-----------|
+| **Por defecto** | Configuración estándar | Proyectos generales |
+| **Material Design** | Optimizado Android | Apps Android nativas |
+| **iOS Rounded** | Iconos redondeados | Apps iOS exclusivas |
+| **Android Adaptive** | Fondo transparente | Android 8+ adaptive icons |
+| **Tema Oscuro** | Fondo oscuro | Logos claros |
+| **Marca Corporativa** | Márgenes amplios | Logos con texto |
+| **Web/PWA** | Optimizado web | Aplicaciones web/PWA |
+| **Web Transparente** | Sin fondo | Favicons y PWA |
+| **Windows Metro** | Estilo Windows 10/11 | Apps Windows Modern UI |
+| **macOS Big Sur** | Esquinas redondeadas | Apps macOS App Store |
+| **Gradient Ready** | Logo grande | Aplicar gradientes después |
+| **Minimalista** | Márgenes extra | Diseño minimalista |
+| **Gaming** | Estilo gaming | Apps/juegos |
+| **Red Social** | Estilo Instagram/TikTok | Apps sociales |
 
-Ubicación:
-- Windows: `%APPDATA%\FlutterIconGenerator\config.json`
+---
 
-## Solución de Problemas
+## ⌨️ Atajos de Teclado
+
+- **Ctrl+O**: Abrir imagen
+- **Menú Archivo**: Acceso a archivos recientes
+- **Menú Flutter**: Integración con proyecto Flutter
+
+---
+
+## 📊 Resumen por Fase
+
+### Fase 3 ✅ (Actual)
+- **5 Plataformas**: Android, iOS, Web, Windows, macOS
+- **50+ Archivos** generados automáticamente
+- **YAML automático** para flutter_launcher_icons
+- **Copia automática** al proyecto Flutter
+- **14 Templates** predefinidos
+- Detección de Flutter instalado
+
+### Fase 2 ✅ 
+- Preview visual en tiempo real
+- Configuración persistente (JSON)
+- 6 Templates básicos
+- Historial de archivos recientes
+- Interfaz mejorada
+
+### Fase 1 ✅
+- Android + iOS completos
+- 23 archivos automáticos
+- Interfaz gráfica base
+- Escalado ajustable
+
+---
+
+## 🔧 Requisitos
+
+### Para Usar el Ejecutable
+- Windows 10/11
+- No requiere Python ni dependencias
+
+### Para Desarrollo
+- Python 3.8+
+- Pillow
+- PyYAML
+- PyInstaller
+
+---
+
+## 🐛 Solución de Problemas
 
 ### La aplicación no inicia
 - Verifica Windows 10/11
-- Ejecuta como Administrador
+- Ejecuta como Administrador si es necesario
 
 ### Error al generar iconos
 - Verifica que la imagen no esté corrupta
-- Comprueba permisos de escritura
+- Asegúrate de tener permisos de escritura
 - Usa formato PNG para mejor compatibilidad
 
-### Los iconos se ven mal
-- Usa "Vista Previa" antes de generar
-- Ajusta las escalas con los sliders
-- Prueba diferentes templates
-- Usa imagen de alta resolución (512x512 mínimo)
+### Flutter no detectado
+- Asegúrate de que Flutter esté en el PATH
+- Menú "Flutter" → "Verificar instalación Flutter"
 
-### Configuración no se guarda
-- Verifica permisos en `%APPDATA%\FlutterIconGenerator\`
+### Copia a proyecto falla
+- Verifica que sea un proyecto Flutter válido (debe tener pubspec.yaml)
+- Asegúrate de tener permisos de escritura en el proyecto
 
-## Roadmap
+---
 
-### Fase 1 ✅ (Completada)
-- Core funcional
-- Generación completa Android/iOS
-- Interfaz básica
+## 📝 Configuración Persistente
 
-### Fase 2 ✅ (Actual)
-- Preview visual
-- Configuración persistente
-- Templates predefinidos
+La aplicación guarda automáticamente en:
+- Windows: `%APPDATA%\FlutterIconGenerator\config.json`
+
+Incluye:
+- Últimas rutas utilizadas
+- Configuración de plataformas
+- Escalas y colores
 - Historial de archivos
 
-### Fase 3 (Próxima)
-- Integración automática con flutter_launcher_icons
-- Soporte Web, Windows y macOS
-- Generación automática de YAML
-- Más templates personalizables
-- Importación de configuraciones
+---
 
-## Requisitos
+## 📈 Roadmap Futuro
 
-- Windows 10/11
-- Python 3.8+ (solo para desarrollo)
-- Pillow, PyInstaller (solo para desarrollo)
+- [ ] Soporte para Linux
+- [ ] Editor visual de iconos integrado
+- [ ] Más formatos de salida (SVG, WebP)
+- [ ] Compresión automática de imágenes
+- [ ] Batch processing (múltiples iconos)
+- [ ] Integración CI/CD
 
-## Licencia
+---
 
-MIT License - Libre para usar y modificar
+## 🤝 Contribuir
 
-## Contribuir
-
-Las contribuciones son bienvenidas. Por favor:
+Las contribuciones son bienvenidas:
 1. Fork el proyecto
 2. Crea una rama para tu feature
 3. Commit tus cambios
@@ -223,4 +294,23 @@ Las contribuciones son bienvenidas. Por favor:
 
 ---
 
+## 📄 Licencia
+
+MIT License - Libre para usar y modificar
+
+---
+
 **Hecho con ❤️ para la comunidad Flutter**
+
+**Versión Actual**: v3.0 - Fase 3 Multiplataforma
+
+---
+
+## 📞 Soporte
+
+¿Tienes problemas o sugerencias?
+- Revisa el log de progreso en la aplicación
+- Verifica que cumples con los requisitos mínimos
+- Consulta la sección de Solución de Problemas
+
+¡Gracias por usar Flutter Icon Generator! 🚀
