@@ -105,6 +105,7 @@ celerybeat.pid
 .env
 .venv
 env/
+venv
 # venv/  # Commented out - we're using venv in this project
 ENV/
 env.bak/
